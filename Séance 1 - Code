@@ -42,17 +42,6 @@ print(f"Modulo : {a} % {b} = {a % b}")
 # Puissance
 print(f"Puissance : {a} ** {b} = {a ** b}")
 
-
-
-
-
-
-
-
-
-
-
-
 s1 = "Bonjour"
 s2 = "monde"
 s3 = "  Python est génial!  "
@@ -62,7 +51,38 @@ print(f"upper() : '{s1}' -> '{s1.upper()}'")
 print(f"Concaténation : '{s1}' + ' ' + '{s2}' = '{s1 + ' ' + s2}'")
 
 
+#5
 
+taux = 1.08
+
+if taux > 1:
+    print("au-dessus de 1")
+elif taux == 1:
+    print("égal à 1")
+else:
+    print("en-dessous de 1")
+
+
+#6
+
+taux = [1.08, 1.10, 0.97, 1.02, 0.99]
+
+for t in taux:
+    print(t)
+
+# Somme avec for
+somme = 0
+for t in taux:
+    somme = somme + t
+print("somme =", somme)
+
+# Somme avec while
+somme = 0
+i = 0
+while i < len(taux):
+    somme = somme + taux[i]
+    i = i + 1
+print("somme =", somme)
 
 
 
