@@ -1,3 +1,84 @@
+
+
+#### PARTIE A ######
+
+
+#2
+a="Hello"
+print(a)
+
+#3
+print(type(1), type("a"), type(True), type(1.5), type([1, "a"]), type({}))
+
+
+
+#4
+
+# Définition de deux nombres pour les tests
+a = 15
+b = 4
+
+print("=== Opérations arithmétiques ===")
+print(f"a = {a}, b = {b}\n")
+
+# Addition
+print(f"Addition : {a} + {b} = {a + b}")
+
+# Soustraction
+print(f"Soustraction : {a} - {b} = {a - b}")
+
+# Multiplication
+print(f"Multiplication : {a} * {b} = {a * b}")
+
+# Division (réelle)
+print(f"Division : {a} / {b} = {a / b}")
+
+# Division entière (quotient)
+print(f"Division entière : {a} // {b} = {a // b}")
+
+# Modulo (reste de la division entière)
+print(f"Modulo : {a} % {b} = {a % b}")
+
+# Puissance
+print(f"Puissance : {a} ** {b} = {a ** b}")
+
+
+
+
+
+
+
+
+
+
+
+
+s1 = "Bonjour"
+s2 = "monde"
+s3 = "  Python est génial!  "
+
+print(f"split() : '{s1} {s2}' -> {s1.split()}")
+print(f"upper() : '{s1}' -> '{s1.upper()}'")
+print(f"Concaténation : '{s1}' + ' ' + '{s2}' = '{s1 + ' ' + s2}'")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ##### PARTIE C1 #####
 
 reponse = {
