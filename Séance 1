@@ -1,0 +1,58 @@
+
+
+
+
+PARTIE A 
+
+1. C’est quoi Python ? À quoi sert ce langage ? Est-il compilé ou interprété ?
+
+
+Python est un langage de programmation qui peut servir à une multitude de taches comme l’automatisation, calculer, manipuler et analyser des données, entrainer des algorithmes. Pour faciliter ces taches, il existe de nombreuses librairies telles que Pandas et Numpy.
+Il s’agit d’un langage interprété car il lit et interpréte les lignes de code une par une.
+
+
+2. Comment installe-t-on Python ? Comment vérifie-t-on qu’il est bien installé et quelle version on utilise ?
+
+
+
+4. Quels sont les types de base en Python ? 
+Que signifie « typage dynamique » ? 
+Que donne "3" + 4 et pourquoi ?
+
+Les types de bases sont :
+- String pour les chaine de caractères
+- Integer pour les nombres entiers
+- Boolean qui renvoie True ou False
+
+En typage dynamique, on a pas besoin d’annoncer le type de la variable avant de lui affecter une valeur. Son type est directement déterminé par la valeur qui lui est affecté.
+
+Si on lance « 3 » + 4, le code ne fonctionnera pas car on ne peut pas concaténer ni additionner des valeurs de types différents.
+
+
+5. Quelle est la différence entre un opérateur booléen et un opérateur logique ?
+
+Un opérateur Booléen 
+
+
+6. Quand utilise-t-on une boucle for et quand une boucle while ?
+
+On utilise un « for » quand on connait le nombre d’itérations. On utilise « While » quand on veut répéter l’action jusqu’à ce qu’une condition ne soit plus vérifiée. 
+
+
+
+
+
+PARTIE C
+
+1. Quand on attribue une nouvelle valeur à une clé mutable, l’ancienne valeur est écrasée. Les clés sont uniques et un dictionnaire ne peut pas contenir plusieurs clés avec le même nom.
+
+2. Sur une clé qui n’est pas imbriquée, la copie est superficielle et la modifier ne modifie pas l’originale. Au contraire, quand elle est imbriquée elle est modifiée. Cela est du au faut que la fonction copy() copie le dictionnaire principal mais partage la référence vers les sous-objets.
+
+3. On fait une copie profonde en python en utilisant la fonction deepcopy(), à partir de la librairie « copy ».
+
+
+
+
+
+
+
