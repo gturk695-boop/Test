@@ -40,7 +40,15 @@ On utilise un « for » quand on connait le nombre d’itérations. On utilise
 
 
 
-PARTIE C
+PARTIE B
+
+
+
+
+
+
+
+PARTIE C1
 
 1. Quand on attribue une nouvelle valeur à une clé mutable, l’ancienne valeur est écrasée. Les clés sont uniques et un dictionnaire ne peut pas contenir plusieurs clés avec le même nom.
 
@@ -51,6 +59,14 @@ PARTIE C
 
 
 
+PARTIE C2
 
+
+1.	Une API est une interface qui permet à deux programmes de communiquer. Il s’agit d’un service en ligne qui met à disposition des données ou des fonctions que le code peut demander. 
+Envoyer une requête correspond à envoyer une demande au serveur de l’API pour récupérer une donnée. À partir de cette demander, l’API va chercher la donnée et nous l’envoyer. 
+Le JSON est un format texte d'échange de données universel entre les langages. Il se traduit en un dictionnaire sur Python.
+
+
+2.	Il existe plusieurs raisons pour utiliser le cache. D’abord, cela augmente la vitesse car lire un fichier local est instantané alors qu’un appel réseau est lent. De plus, les API limitent le nombre de requêtes et le cache évite de gaspiller le quota. Ensuite, pour la robustesse, le script marche même hors ligne ou si l'API tombe. Pour finir,  la donnée figée donne les mêmes résultats à chaque exécution.
 
 
