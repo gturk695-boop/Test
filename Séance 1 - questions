@@ -41,6 +41,22 @@ On utilise un « for » quand on connait le nombre d’itérations. On utilise
 
 
 PARTIE B
+1)
+Git est un logiciel de gestion de versions installé en local sur une machine. Il suit l'historique d'un projet et permet de revenir à n'importe quel état antérieur, sans connexion Internet.
+GitHub est un service en ligne qui héberge des dépôts Git sur le web, pour les sauvegarder à distance et permettre la collaboration.
+La différence, Git est l'outil qui tourne sur l'ordinateur, GitHub est la plateforme où l'on publie ce que Git a versionné. Git peut s'utiliser seul, GitHub sans Git n'aurait pas de sens.
+
+
+
+Git et GitHub servent d'abord à suivre l'historique d'un projet, puisque chaque version est enregistrée avec sa date et un message, ce qui permet de savoir qui a modifié quoi et quand. 
+Ils permettent aussi de revenir en arrière, car si une modification introduit une erreur, on restaure une version antérieure fonctionnelle sans perdre le travail. Ils facilitent le travail collaboratif, 
+plusieurs personnes contribuant au même projet en parallèle, Git fusionnant les modifications et signalant les conflits au lieu d'écraser le travail d'un autre. GitHub ajoute enfin la sauvegarde à distance, 
+qui met le projet en sécurité et le rend accessible depuis n'importe quel poste.
+
+
+
+
+
 
 
 
