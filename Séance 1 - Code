@@ -1,0 +1,99 @@
+##### PARTIE C1 #####
+
+reponse = {
+"amount": 1.0,
+"base": "EUR",
+"date": "2024-01-02",
+"rates": {"USD": 1.0956},
+}
+
+
+
+#1 
+reponse["amount"]
+
+___________________________________
+
+#2
+reponse["amount"] = 3.0
+reponse
+
+# cela écrase l'ancienne valeur et la remplace dans le dictionnaire
+
+___________________________________
+
+#3
+
+copie = reponse.copy()
+copie["amount"] = 2
+reponse
+
+# l'original n'est pas modifié
+
+copie2 = reponse.copy()
+copie2["rates"]["USD"] = 4
+reponse
+
+# l'original est modifiée
+
+
+___________________________________
+
+##### PARTIE C2 #####
+
+#1 
+import urllib.request
+import json
+
+url = "https://api.frankfurter.app/latest?from=EUR&to=USD"
+
+requete = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+
+with urllib.request.urlopen(requete) as reponse:
+    contenu = reponse.read()
+    data = json.loads(contenu)
+
+print("Date :", data["date"])
+print("Taux USD :", data["rates"]["USD"])
+
+
+___________________________________
+
+
+
+#2
+
+import os
+
+url = "https://api.frankfurter.app/2026-01-01..2026-09-01?from=EUR&to=USD"
+
+# Appel de l'API
+requete = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+with urllib.request.urlopen(requete) as reponse:
+    contenu = reponse.read()
+
+data = json.loads(contenu)
+
+# Enregistrer la réponse brute dans cache
+
+os.makedirs("cache", exist_ok=True)
+with open("cache/reponse.json", "wb") as f:
+    f.write(contenu)
+
+# Écrire un CSV dans donnees
+os.makedirs("donnees", exist_ok=True)
+with open("donnees/taux.csv", "w") as f:
+    f.write("date,USD\n")
+    for date in sorted(data["rates"]):
+        taux = data["rates"][date]["USD"]
+        f.write(date + "," + str(taux) + "\n")
+
+print("Terminé, CSV écrit avec", len(data["rates"]), "lignes")
+
+
+#pour afficher 
+for date in sorted(data["rates"]):
+    taux = data["rates"][date]["USD"]
+    print(date, ":", taux)
+___________________________________
+
