@@ -70,8 +70,10 @@ PARTIE C1
 
 2. Sur une clé qui n’est pas imbriquée, la copie est superficielle et la modifier ne modifie pas l’originale. Au contraire, quand elle est imbriquée elle est modifiée. Cela est du au faut que la fonction copy() copie le dictionnaire principal mais partage la référence vers les sous-objets.
 
-3. On fait une copie profonde en python en utilisant la fonction deepcopy(), à partir de la librairie « copy ».
-
+3. La mutabilité est la capacité d'un objet à être modifié après sa création. Un objet mutable peut changer en place. Un objet immuable non. Toute modification en crée un nouveau.
+Une copie superficielle recopie le premier niveau mais partage les objets imbriqués avec l'original. Modifier une partie imbriquée affecte alors les deux. 
+Une copie profonde recopie tout jusqu'au fond sans aucun partage. L'original reste totalement indépendant.
+On fait une copie profonde en python en utilisant la fonction deepcopy(), à partir de la librairie « copy ».
 
 
 
