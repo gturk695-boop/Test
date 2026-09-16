@@ -39,12 +39,4 @@ La complexité temporelle mesure la croissance du nombre d'opérations en foncti
 **4. C'est quoi la mémoïsation ? Que fait functools.lru_cache ? Pourquoi Python limite-t-il la profondeur de récursion ?**
 La mémoïsation stocke les résultats déjà calculés pour les réutiliser sans les recalculer. functools.lru_cache applique automatiquement cette technique à une fonction via un décorateur. Python limite la profondeur de récursion car chaque appel en attente occupe de la mémoire dans la pile d'appels ; sans limite, une récursion sans fin épuiserait la mémoire disponible — la limite provoque une RecursionError propre avant d'en arriver là.
 
-## Tableau de mesures (C.3)
 
-| Version | Temps pour n=30 |
-|---|---|
-| Naïve | (0.068125s) |
-| Mémoïsée | (0.000007s) |
-| Itérative | (0.000004s) |
-
-Sur la mémoire : les versions naïve et mémoïsée utilisent de la mémoire pour la pile d'appels récursifs (chaque appel en attente occupe de la place) ; la version mémoïsée utilise en plus de la mémoire pour stocker le cache des résultats déjà calculés. La version itérative n'utilise que deux variables, quelle que soit la taille de n — c'est la plus économe en mémoire.
