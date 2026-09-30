@@ -1,0 +1,230 @@
+# ============================================
+# PARTIE A — Python idiomatique
+# ============================================
+
+# --- A.1 : compréhensions ---
+taux_liste = [1.05, 1.06, 1.04, 1.09]
+variations = [taux_liste[i] - taux_liste[i-1] for i in range(1, len(taux_liste))]
+print("Variations:", variations)
+
+dates = ["2026-01-01", "2026-01-02", "2026-01-05"]
+taux = [1.05, 1.06, 1.04]
+dico_taux = {dates[i]: taux[i] for i in range(len(dates))}
+print("Dictionnaire:", dico_taux)
+
+# --- A.2 : enumerate, zip, sorted ---
+for indice, valeur in enumerate(taux_liste):
+    print(f"Indice {indice} : {valeur}")
+
+for date, valeur in zip(dates, taux):
+    print(f"{date} : {valeur}")
+
+paires = list(zip(dates, taux))
+tri_par_taux = sorted(paires, key=lambda paire: paire[1], reverse=True)
+print("Trié par taux (décroissant):", tri_par_taux)
+
+# --- A.3 : f-strings, lambda, map/filter ---
+taux_exemple = 1.162368421
+print(f"Taux : {taux_exemple:.2f}")
+
+doubler = lambda x: x * 2
+print("Doubler 5:", doubler(5))
+
+taux_en_pourcent = list(map(lambda x: x * 100, taux_liste))
+print("En pourcent:", taux_en_pourcent)
+
+taux_eleves = list(filter(lambda x: x > 1.05, taux_liste))
+print("Taux élevés:", taux_eleves)
+
+
+# ============================================
+# PARTIE B — Programmation orientée objet
+# ============================================
+
+class SerieTaux:
+    """Regroupe les taux d'une devise et les opérations pour les analyser."""
+
+    source = "Frankfurter API"   # attribut de CLASSE : partagé par toutes les instances
+
+    def __init__(self, devise, dates, taux):
+        """Le constructeur : s'exécute automatiquement à la création d'un objet."""
+        self.devise = devise
+        self.dates = dates
+        self.taux = taux
+
+    def moyenne(self):
+        """Calcule la moyenne des taux de cette série."""
+        return sum(self.taux) / len(self.taux)
+
+    def variation(self):
+        """Calcule la variation en % entre le premier et le dernier taux."""
+        return (self.taux[-1] - self.taux[0]) / self.taux[0] * 100
+
+    def taux_a_date(self, date_recherchee):
+        """Renvoie le taux correspondant à une date donnée, ou None si absente."""
+        for date, valeur in zip(self.dates, self.taux):
+            if date == date_recherchee:
+                return valeur
+        return None
+
+
+serie_usd = SerieTaux("USD", ["2026-01-01", "2026-01-02", "2026-01-05"], [1.05, 1.06, 1.04])
+
+print("Devise:", serie_usd.devise)
+print("Moyenne USD:", serie_usd.moyenne())
+print("Variation USD:", serie_usd.variation())
+print("Taux au 2026-01-02:", serie_usd.taux_a_date("2026-01-02"))
+print("Taux au 2026-01-09 (absent):", serie_usd.taux_a_date("2026-01-09"))
+
+# --- B.2 : plusieurs objets, attribut de classe vs attribut d'instance ---
+serie_gbp = SerieTaux("GBP", ["2026-01-01", "2026-01-02", "2026-01-05"], [0.87, 0.88, 0.86])
+
+print("Devise USD:", serie_usd.devise, "- Moyenne:", serie_usd.moyenne())
+print("Devise GBP:", serie_gbp.devise, "- Moyenne:", serie_gbp.moyenne())
+print("Source USD:", serie_usd.source)
+print("Source GBP:", serie_gbp.source)
+
+# --- B.2 (piège) : attribut de classe MUTABLE, à ne pas reproduire ---
+class Compteur:
+    historique = []   # attribut de classe, mais c'est une LISTE (mutable) -> DANGER
+
+    def __init__(self, nom):
+        self.nom = nom
+
+    def ajouter(self, texte):
+        self.historique.append(texte)
+
+c1 = Compteur("premier")
+c2 = Compteur("deuxieme")
+c1.ajouter("action de c1")
+
+print("Historique de c1:", c1.historique)
+print("Historique de c2:", c2.historique)   # affiche aussi "action de c1" : c'est le piège !
+
+# --- B.3 : dataclasses ---
+from dataclasses import dataclass
+
+@dataclass
+class Point:
+    """Un point simple avec une date et un taux, écrit avec @dataclass."""
+    date: str
+    taux: float
+
+p1 = Point("2026-01-01", 1.05)
+print(p1)
+print("Date:", p1.date)
+print("Taux:", p1.taux)
+
+
+# ============================================
+# PARTIE C — Visualiser avec matplotlib
+# ============================================
+
+import ssl
+import certifi
+ssl._create_default_https_context = lambda: ssl.create_default_context(cafile=certifi.where())
+
+import matplotlib.pyplot as plt
+import urllib.request
+import json
+
+# --- C.1 : récupération des taux USD et premier graphique ---
+url = "https://api.frankfurter.app/2026-01-01..2026-01-31?from=EUR&to=USD"
+requete = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+reponse = urllib.request.urlopen(requete)
+donnees = json.loads(reponse.read())
+
+dates_c = sorted(donnees["rates"].keys())
+taux_c = [donnees["rates"][date]["USD"] for date in dates_c]
+
+fig, ax = plt.subplots()
+ax.plot(dates_c, taux_c)
+ax.set_title("Taux EUR/USD - Janvier 2026")
+ax.set_xlabel("Date")
+ax.set_ylabel("Taux USD")
+plt.xticks(rotation=45)
+plt.tight_layout()
+fig.savefig("graphique_usd.png")
+print("C.1 : graphique_usd.png sauvegardé")
+
+# --- C.2 : récupération des taux GBP, comparaison, histogramme, subplots ---
+url_gbp = "https://api.frankfurter.app/2026-01-01..2026-01-31?from=EUR&to=GBP"
+requete_gbp = urllib.request.Request(url_gbp, headers={"User-Agent": "Mozilla/5.0"})
+reponse_gbp = urllib.request.urlopen(requete_gbp)
+donnees_gbp = json.loads(reponse_gbp.read())
+
+dates_gbp = sorted(donnees_gbp["rates"].keys())
+taux_gbp = [donnees_gbp["rates"][date]["GBP"] for date in dates_gbp]
+
+fig1, ax1 = plt.subplots()
+ax1.plot(dates_c, taux_c, label="EUR/USD")
+ax1.plot(dates_gbp, taux_gbp, label="EUR/GBP")
+ax1.set_title("Comparaison USD vs GBP - Janvier 2026")
+ax1.set_xlabel("Date")
+ax1.set_ylabel("Taux")
+ax1.legend()
+plt.xticks(rotation=45)
+plt.tight_layout()
+fig1.savefig("comparaison_usd_gbp.png")
+
+variations_c = [taux_c[i] - taux_c[i-1] for i in range(1, len(taux_c))]
+
+fig2, ax2 = plt.subplots()
+ax2.hist(variations_c, bins=10)
+ax2.set_title("Distribution des variations quotidiennes USD")
+ax2.set_xlabel("Variation")
+ax2.set_ylabel("Fréquence")
+plt.tight_layout()
+fig2.savefig("histogramme_variations.png")
+
+fig3, axes = plt.subplots(1, 2, figsize=(10, 4))
+axes[0].plot(dates_c, taux_c)
+axes[0].set_title("USD")
+axes[0].tick_params(axis='x', rotation=45)
+axes[1].plot(dates_gbp, taux_gbp)
+axes[1].set_title("GBP")
+axes[1].tick_params(axis='x', rotation=45)
+plt.tight_layout()
+fig3.savefig("subplots_usd_gbp.png")
+
+print("C.2 : trois graphiques sauvegardés (comparaison, histogramme, subplots)")
+
+
+# ============================================
+# PARTIE D — Assembler et finaliser (argparse)
+# ============================================
+
+import argparse
+
+def extraire():
+    print("Extraction des données depuis l'API...")
+
+def analyser():
+    print("Analyse des données...")
+
+def graphiques():
+    print("Génération des graphiques...")
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Outil d'analyse des taux de change")
+    sous_commandes = parser.add_subparsers(dest="commande")
+
+    sous_commandes.add_parser("extraire")
+    sous_commandes.add_parser("analyser")
+    sous_commandes.add_parser("graphiques")
+
+    args = parser.parse_args()
+
+    if args.commande == "extraire":
+        extraire()
+    elif args.commande == "analyser":
+        analyser()
+    elif args.commande == "graphiques":
+        graphiques()
+    else:
+        parser.print_help()
+
+
+if __name__ == "__main__":
+    main()
