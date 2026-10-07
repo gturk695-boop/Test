@@ -1,58 +1,67 @@
-# Notes — Séance 3
-
-## Partie A — Découvrir pandas
-
-**1. Qu'est-ce qu'un DataFrame ? Une Series ?**
-Un DataFrame est une structure de données pandas représentant un tableau à deux dimensions, avec des lignes et des colonnes nommées, similaire à une feuille de calcul. Une Series est une structure à une seule dimension, représentant une colonne unique (ou une liste de valeurs indexées) — c'est ce qu'on obtient en extrayant une colonne d'un DataFrame.
-
-**2. Pourquoi utiliser pandas plutôt que des boucles et le module csv ? Que signifie "vectorisation" ?**
-pandas permet d'effectuer des opérations sur des tableaux entiers en une seule instruction, au lieu d'écrire des boucles manuelles — le code est plus court, plus lisible, et généralement plus rapide à l'exécution. La vectorisation désigne le fait d'appliquer une opération à toutes les valeurs d'une colonne (ou d'un tableau) en une seule fois, en interne via du code optimisé, plutôt que de parcourir chaque élément un par un avec une boucle Python classique.
-
-**3. Pourquoi déconseille-t-on iterrows() ?**
-iterrows() parcourt le DataFrame ligne par ligne avec une boucle Python classique, ce qui annule l'intérêt principal de pandas : la vectorisation. C'est beaucoup plus lent que les opérations vectorisées équivalentes (comme df["USD"].mean()), surtout sur de gros volumes de données. Il vaut mieux toujours chercher une opération vectorisée avant d'envisager iterrows().
-
-**4. Comment pandas représente-t-il les valeurs manquantes (NaN) ? Conséquences sur les moyennes ?**
-pandas représente une valeur manquante par la valeur spéciale NaN (Not a Number). Par défaut, les fonctions de calcul de pandas comme .mean() ignorent automatiquement les NaN dans leurs calculs — la moyenne est donc calculée uniquement sur les valeurs réellement présentes, sans que les NaN ne faussent le résultat.
-
-## Partie B — Nettoyer, consolider et analyser
-
-**1. C'est quoi le forward-fill ? Quelle hypothèse fait-on en l'utilisant ?**
-Le forward-fill (ffill) consiste à remplacer une valeur manquante par la dernière valeur connue avant elle, en la propageant dans le temps. Dans notre cas, l'hypothèse sous-jacente est que le taux de change reste stable les jours où les marchés sont fermés (week-ends, jours fériés), puisqu'aucune nouvelle cotation n'a lieu — c'est une approximation raisonnable, mais qui ne reflète pas d'éventuels mouvements de marché qui auraient pu survenir un jour férié dans la réalité.
-
-**2. À quoi sert resample ? Que signifie une moyenne mobile ?**
-resample sert à regrouper des données temporelles à une fréquence différente (par exemple passer de données journalières à des données mensuelles), en appliquant une fonction d'agrégation (moyenne, somme, etc.) sur chaque groupe. Une moyenne mobile est la moyenne calculée sur une fenêtre glissante de taille fixe (par exemple les 7 derniers jours), recalculée à chaque nouveau point : elle permet de lisser les fluctuations de court terme pour mieux visualiser la tendance générale.
-
-## Partie C — Les jointures
-
-**1. Rappelez les quatre types de jointure (inner, left, right, outer) : que garde chacune ?**
-inner garde uniquement les clés présentes dans les deux tables (l'intersection). left garde toutes les lignes de la table de gauche, avec des NaN côté droit là où il n'y a pas de correspondance. right garde toutes les lignes de la table de droite, avec des NaN côté gauche là où il n'y a pas de correspondance. outer garde toutes les lignes des deux tables (l'union), avec des NaN de chaque côté là où une correspondance manque.
-
-**2. Sur quelle colonne (clé) joint-on ? Que devient une ligne sans correspondance dans l'autre table ?**
-On joint sur une colonne commune aux deux tables, choisie comme identifiant partagé (ici, la date, ou la colonne "cle" dans l'exemple pédagogique). Une ligne sans correspondance dans l'autre table est soit exclue du résultat (cas inner), soit conservée avec des valeurs NaN pour les colonnes de l'autre table (cas left, right, outer, selon que cette ligne appartient à la table "prioritaire" ou non).
-
-**3. Pour réunir deux séries de taux sur la même période, quelle jointure choisir et pourquoi ?**
-Une jointure inner est adaptée, car les deux séries couvrent exactement la même période et les mêmes jours ouvrés : toutes les dates correspondent des deux côtés, donc le résultat est identique quel que soit le type de jointure choisi parmi ceux qui ne perdent pas de données. inner est un choix naturel et sûr puisqu'on s'attend à ce que les clés coïncident parfaitement — ce qui a été vérifié en comparant le nombre de lignes avant et après la jointure (171 dans les deux cas).
-
-**4. Quelle différence entre merge et concat ? Dans quel cas utiliser l'un ou l'autre ?**
-merge associe les lignes de deux tables en fonction d'une colonne clé commune (ou de l'index, dans le cas de join), en recherchant des correspondances. concat empile simplement des tables (ajout de lignes ou de colonnes) sans chercher de correspondance par clé. On utilise merge quand on veut combiner des informations liées par un identifiant commun (comme réunir deux séries de taux par date) ; on utilise concat quand on veut simplement assembler des données de même structure, par exemple ajouter les données d'un nouveau mois à la suite des mois précédents.
-
-## Partie D — numpy et aperçu de polars
-
-**1. Différence entre une liste Python et un tableau numpy (ndarray) ? C'est quoi un dtype ? Le broadcasting ?**
-Une liste Python peut contenir des éléments de types différents (un entier, un texte, un booléen dans la même liste) et chaque élément est stocké comme un objet Python séparé, ce qui est flexible mais lent. Un tableau numpy (ndarray) impose un type unique pour tous ses éléments (défini par son dtype, comme float64 ou int32), stockés de façon compacte et contiguë en mémoire, ce qui permet des calculs beaucoup plus rapides. Le broadcasting est la capacité de numpy à appliquer automatiquement une opération entre un tableau et une valeur unique (ou un tableau de forme compatible) à chaque élément, sans écrire de boucle explicite.
-
-**2. Pourquoi numpy est-il plus rapide que des boucles Python ?**
-numpy stocke ses données de façon compacte et homogène en mémoire (un seul type par tableau), et exécute ses opérations via du code compilé en langage bas niveau (C), optimisé et exécuté directement sur des blocs entiers de données. Une boucle Python classique, elle, interprète chaque itération une par une, avec la surcharge de l'interpréteur à chaque étape — numpy évite cette surcharge en traitant le tableau entier en une seule opération vectorisée.
-
-**3. Différences entre pandas et polars (langage d'implémentation, usage des cœurs, évaluation paresseuse) ? Quand choisir l'un ou l'autre ?**
-pandas et polars diffèrent sur trois points techniques précis. D'abord, le langage d'implémentation : pandas est construit principalement en Python, avec certaines parties critiques écrites en Cython pour accélérer les calculs les plus fréquents, mais reste globalement soumis aux contraintes de performance d'un langage interprété. polars est construit en Rust, un langage compilé et bas niveau, réputé pour ses performances proches du C/C++ tout en restant sûr en mémoire — le code Python appelle en réalité un moteur Rust déjà compilé, qui effectue le vrai travail de calcul.
-
-Ensuite, l'usage des cœurs du processeur : pandas exécute la plupart de ses opérations sur un seul cœur à la fois, même si la machine en possède plusieurs de disponibles. polars répartit nativement le travail sur tous les cœurs disponibles en parallèle, sans configuration particulière : plusieurs cœurs traitent des portions du tableau simultanément, puis les résultats partiels sont combinés à la fin.
-
-Enfin, l'évaluation paresseuse (lazy evaluation) : pandas fonctionne en mode "eager", chaque instruction s'exécutant immédiatement dans l'ordre où elle est écrite, sans vue d'ensemble sur les étapes suivantes. polars propose un mode paresseux où toute une chaîne d'opérations (filtrer, trier, agréger) est d'abord décrite sans être exécutée ; ce n'est qu'au moment de l'appel à .collect() que polars examine l'intégralité du plan demandé et l'optimise avant de l'exécuter réellement (suppression d'étapes inutiles, réorganisation, lecture sélective des colonnes nécessaires).
-
-Ces trois différences n'ont un effet visible que sur des volumes de données importants : sur un petit fichier, le gain est négligeable, voire masqué par d'autres facteurs comme le temps de démarrage des bibliothèques. En pratique, pandas reste préférable pour des volumes de données modérés et pour son immense écosystème compatible (matplotlib, scikit-learn, etc.) ; polars devient préférable sur de très gros volumes de données (millions de lignes), là où la vitesse d'exécution et l'usage optimal du matériel disponible deviennent des enjeux réels, ou pour des pipelines de traitement à plusieurs étapes où l'évaluation paresseuse permet d'optimiser l'ensemble plutôt que chaque étape isolément.
-
-## Comparatif avec la séance 2
-
-Le même calcul de moyenne qui nécessitait plusieurs lignes de boucle for en séance 2 s'écrit en une seule instruction avec pandas (df["USD"].mean()), et est généralement exécuté plus rapidement grâce à la vectorisation.
+## Comparaison avec la séance 2
+ 
+Sur notre série EUR/USD de 171 jours, pandas donne exactement les mêmes résultats que nos fonctions de la séance 2, avec une moyenne de 1,16237, un minimum de 1,134 et un maximum de 1,1974. La différence se voit surtout dans le code. En séance 2, il fallait lire le CSV ligne par ligne, convertir chaque taux en nombre, puis écrire des boucles pour la moyenne, le minimum et le maximum. Avec pandas, "read_csv" charge le fichier directement avec les bons types, et chaque calcul tient en une ligne.
+ 
+## Partie A. Découvrir pandas
+ 
+### A Q1. DataFrame et Series
+ 
+Un DataFrame est un tableau à deux dimensions, avec des lignes et des colonnes, un peu comme une feuille Excel. Chaque ligne a une étiquette, l'index, qui est la date dans notre cas, et chaque colonne a un nom, comme "USD". Une Series correspond à une seule colonne, par exemple df["USD"]. Un DataFrame est en fait un ensemble de Series qui partagent le même index.
+ 
+### A Q2. Pourquoi pandas plutôt que des boucles et le module csv, vectorisation
+ 
+pandas permet d'écrire beaucoup moins de code, il gère tout seul la lecture du fichier et les types, et il propose déjà les outils dont on a besoin en finance, comme les variations, les moyennes mobiles ou les jointures. Il est aussi plus rapide grâce à la vectorisation. Vectoriser, c'est appliquer une opération à toute une colonne d'un coup, par exemple df["USD"] * 100, au lieu d'écrire une boucle qui traite les valeurs une par une. Le calcul est alors fait en interne par numpy, dans un langage compilé, ce qui va beaucoup plus vite qu'une boucle Python.
+ 
+### A Q3. Pourquoi déconseille-t-on iterrows() ?
+ 
+"iterrows()" parcourt le DataFrame ligne par ligne avec une boucle Python, donc on perd tout l'intérêt de la vectorisation et ça devient très lent sur de grandes tables. En plus, chaque ligne est transformée en Series, ce qui peut changer le type des valeurs. Il vaut presque toujours mieux faire l'opération directement sur la colonne entière.
+ 
+### A Q4. Valeurs manquantes (NaN), conséquences sur les moyennes
+ 
+pandas note une valeur manquante "NaN", pour « Not a Number ». Chez nous, il y en avait 4 après avoir réindexé la série sur les jours ouvrés, une pour chaque jour férié de la BCE (le 1er janvier, le Vendredi saint, le lundi de Pâques et le 1er mai). Par défaut, "mean()", "sum()" ou "min()" ignorent les NaN, et la moyenne est donc calculée seulement sur les valeurs présentes. Ça évite une erreur, mais il faut garder en tête que la moyenne peut porter sur moins de jours qu'on ne le pense.
+ 
+## Partie B. Nettoyer et analyser
+ 
+### B.1 Pourquoi le forward-fill
+ 
+Les jours fériés, la BCE ne publie pas de nouveau taux, donc le dernier taux publié reste le taux de référence jusqu'à la publication suivante. Il nous a donc paru logique de le reprendre, plutôt que de laisser un trou qui fausserait les calculs jour par jour ou d'inventer une valeur. Comme on ne comble que 4 jours sur 175, ça n'a presque aucun effet sur nos statistiques.
+ 
+### B Q1. C'est quoi le forward-fill, quelle hypothèse ?
+ 
+Le forward-fill, avec "ffill()", remplace chaque valeur manquante par la dernière valeur connue avant elle. Le taux du 1er janvier 2026 est par exemple remplacé par celui du 31 décembre 2025. L'hypothèse, c'est que le taux n'a pas changé pendant le jour manquant. Elle est raisonnable pour un jour férié, mais elle le serait beaucoup moins pour un long trou dans les données. Elle crée aussi des variations journalières égales à zéro, qu'on retrouve dans nos calculs avec numpy.
+ 
+### B Q2. À quoi sert resample, c'est quoi une moyenne mobile ?
+ 
+"resample" sert à changer la fréquence d'une série temporelle. Nous l'avons utilisé pour passer de données journalières à des données mensuelles, avec resample("ME").mean(), qui calcule la moyenne de chaque mois. Une moyenne mobile est une moyenne calculée sur une fenêtre qui avance dans le temps. Avec "rolling(window=5).mean()", chaque jour, on fait la moyenne des 5 derniers taux. Ça lisse la courbe et permet de mieux voir la tendance. Les 4 premières valeurs sont vides, puisqu'il n'y a pas encore 5 jours d'historique. Sur l'ensemble de la période, l'euro a perdu 1,36 % face au dollar, en passant de 1,175 à 1,159.
+ 
+## Partie C. Les jointures
+ 
+### C Q1. Les quatre types de jointure
+ 
+Une jointure "inner" ne garde que les clés présentes dans les deux tables. Une jointure "left" garde toutes les lignes de la table de gauche et met des NaN à droite quand il n'y a pas de correspondance, et "right" fait l'inverse. Enfin, "outer" garde toutes les lignes des deux tables, avec des NaN des deux côtés si besoin. Dans notre exemple, avec les clés 1 et 2 à gauche et 2 et 3 à droite, "inner" ne garde que la clé 2, "left" garde 1 et 2, "right" garde 2 et 3, et "outer" garde les trois.
+ 
+### C Q2. Sur quelle clé joint-on, que devient une ligne sans correspondance ?
+ 
+On joint sur la colonne commune aux deux tables, la clé, qui est la date dans notre cas. Une ligne sans correspondance disparaît avec "inner". Avec "left", "right" ou "outer", elle est gardée si elle se trouve du côté conservé, et les colonnes de l'autre table sont remplies avec des NaN. Il faut aussi faire attention aux doublons, parce que si une clé apparaît plusieurs fois, la jointure fait toutes les combinaisons possibles. Deux lignes à gauche et trois à droite pour la même clé donnent six lignes, comme on l'a vérifié dans le notebook.
+ 
+### C Q3. Quelle jointure pour deux séries de taux sur la même période ?
+ 
+Comme nos séries ont été réindexées sur le même calendrier, les dates coïncident exactement, et toutes les jointures donnent le même résultat de 175 lignes. Nous avons gardé "inner", qui est le choix par défaut. Il garantit de n'avoir que des dates où l'on dispose de tous les taux, donc sans NaN, ce qui est ce qu'on veut pour comparer les devises jour par jour.
+ 
+### C Q4. Différence entre merge et concat
+ 
+"merge" associe les lignes de deux tables qui ont la même clé, un peu comme une RECHERCHEV dans Excel. On s'en sert pour mettre côte à côte des informations qui portent sur les mêmes dates. "concat" empile simplement des tables sans regarder de clé, soit les unes sous les autres, par exemple pour ajouter une nouvelle année de données à la suite, soit côte à côte. "join" est un raccourci de "merge" qui joint directement sur l'index.
+ 
+## Partie D. numpy et polars
+ 
+### D Q1. Liste Python et tableau numpy, dtype, broadcasting
+ 
+Une liste Python peut mélanger des éléments de types différents, alors qu'un tableau numpy, appelé "ndarray", ne contient que des éléments du même type, rangés les uns à la suite des autres en mémoire. On peut aussi faire des calculs directement sur un tableau numpy, alors que "liste * 2" ne fait que répéter la liste. Le dtype est justement le type commun des éléments du tableau, "float64" pour nos taux. Le broadcasting, c'est le fait que numpy applique automatiquement une opération avec un nombre à tout le tableau. Par exemple, "usd_np * 100" multiplie chaque taux par 100 sans qu'on ait besoin d'écrire de boucle.
+ 
+### D Q2. Pourquoi numpy est plus rapide que des boucles Python ?
+ 
+numpy fait ses calculs en C, un langage compilé, au lieu de passer par l'interpréteur Python à chaque tour de boucle. Comme tous les éléments ont le même type, il n'a pas besoin de vérifier le type de chaque valeur. Et comme les données sont rangées à la suite en mémoire, le processeur peut les lire très rapidement.
+ 
+### D Q3. pandas ou polars ?
+ 
+polars est écrit en Rust et peut utiliser tous les cœurs du processeur en même temps, alors que pandas repose sur Python et numpy et travaille surtout sur un seul cœur. polars propose aussi une évaluation paresseuse, c'est-à-dire qu'il peut regarder toute la suite d'opérations avant de calculer quoi que ce soit, pour l'optimiser. Sa syntaxe est un peu plus longue, avec par exemple select(pl.col("USD").mean()) au lieu de df["USD"].mean(). Sur nos 175 lignes, les deux mettent quelques millisecondes et la différence ne veut pas dire grand-chose. pandas reste plus simple et compatible avec presque toutes les autres librairies, donc c'est le bon choix pour des données de notre taille. polars devient vraiment intéressant sur de très gros volumes, avec des millions de lignes.
