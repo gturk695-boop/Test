@@ -1,4 +1,4 @@
-# Cours Python - BFA1
+# Projet Python
  
 Récupération et analyse des taux de change de référence de la BCE (API Frankfurter) du 1er janvier au 1er septembre 2026, pour le dollar (USD), le yen (JPY) et la livre sterling (GBP).
  
