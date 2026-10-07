@@ -1,42 +1,56 @@
-# Notes — Séance 2
-
-## Partie A — Les fonctions
-
-**1. Pourquoi découper le code en fonctions ? Trois bénéfices concrets ?**
-Trois bénéfices : (1) Réutilisabilité — on écrit un traitement une fois et on l'appelle partout où on en a besoin, sans dupliquer le code. (2) Lisibilité — un programme découpé en fonctions nommées explicitement est plus facile à comprendre qu'un long bloc de code. (3) Facilité de test et de correction — on peut tester et corriger une fonction isolément, sans devoir relire tout le programme.
-
-**2. Différence entre paramètre et valeur de retour ? Que renvoie une fonction sans return ?**
-Un paramètre est une donnée d'entrée que la fonction reçoit pour effectuer son traitement. La valeur de retour (via `return`) est la donnée de sortie que la fonction renvoie au code appelant. Une fonction sans `return` renvoie automatiquement la valeur spéciale `None` (qui signifie "rien"/"aucune valeur").
-
-**3. C'est quoi une docstring, où la place-t-on ?**
-Une docstring est une chaîne de caractères entre triples guillemets (`"""..."""`) placée juste après la ligne `def` d'une fonction, qui décrit brièvement ce que fait la fonction, ses paramètres et ce qu'elle renvoie. Elle sert de documentation directement accessible dans le code.
-
-**4. Différence entre variable locale et variable globale ?**
-Une variable locale est définie à l'intérieur d'une fonction et n'existe que pendant l'exécution de cette fonction — elle est inaccessible depuis l'extérieur. Une variable globale est définie en dehors de toute fonction, au niveau principal du script, et reste accessible (en lecture) depuis n'importe quelle fonction du fichier.
-
-## Partie B — try/except et logging
-
-**1. Pourquoi gérer les erreurs avec try/except ? Que se passe-t-il si une exception n'est pas gérée ? À quoi servent else et finally ?**
-try/except permet d'anticiper les erreurs prévisibles (problèmes réseau, données invalides) et d'y réagir proprement plutôt que de laisser le programme s'arrêter brutalement. Si une exception n'est pas interceptée par un except correspondant, le programme s'arrête immédiatement et affiche un message d'erreur technique (traceback). Le bloc else s'exécute uniquement si aucune erreur ne s'est produite dans le try ; le bloc finally s'exécute systématiquement, qu'il y ait eu une erreur ou non, ce qui est utile pour du nettoyage (fermeture de fichier ou de connexion).
-
-**2. Pourquoi un except: nu (sans préciser le type d'erreur) est-il déconseillé ?**
-Un except: nu intercepte absolument toutes les erreurs possibles, y compris des erreurs de programmation totalement différentes de celles qu'on voulait gérer (par exemple une faute de frappe dans le nom d'une variable). Cela masque des bugs réels au lieu de les révéler, et rend le débogage beaucoup plus difficile puisqu'on ne sait plus quelle erreur a réellement été interceptée. Il vaut mieux préciser le(s) type(s) d'exception exact(s) qu'on veut gérer.
-
-**3. C'est quoi logging ? Pourquoi le préférer à print dans un vrai programme ? Citez les niveaux de log et un usage de chacun.**
-logging est un module de la bibliothèque standard qui permet d'enregistrer des messages avec un niveau de gravité, un horodatage automatique, et de les rediriger vers un fichier plutôt que seulement les afficher à l'écran. Contrairement à print, il permet de garder une trace persistante du déroulement d'un programme, filtrable par niveau de gravité, ce qui est indispensable pour surveiller un programme en conditions réelles. Niveaux : info pour le déroulement normal (ex: "requête envoyée avec succès"), warning pour un cas suspect mais non bloquant (ex: "valeur inhabituelle reçue"), error pour une véritable erreur ayant empêché une opération (ex: "échec de connexion au serveur").
-
-## Partie C — Récursivité et complexité
-
-**1. C'est quoi la récursivité ? Cas de base et cas récursif ? Que se passe-t-il si le cas de base est absent ?**
-La récursivité est une technique où une fonction s'appelle elle-même pour résoudre un problème en le décomposant en une version plus petite du même problème. Le cas de base est la situation la plus simple, résolue directement sans nouvel appel — il arrête la récursion. Le cas récursif est l'appel de la fonction sur elle-même, avec une entrée qui se rapproche du cas de base. Sans cas de base, la fonction s'appellerait indéfiniment elle-même, jusqu'à provoquer une RecursionError (dépassement de la profondeur maximale d'appels autorisée).
-
-**2. Pourquoi utiliser la récursivité ? Est-elle toujours le meilleur choix ? Contre-exemple précis ?**
-La récursivité rend le code plus lisible pour des problèmes naturellement récursifs (factorielle, parcours d'arborescences). Ce n'est pas toujours le meilleur choix : fib_naive en est un contre-exemple précis — sa complexité exponentielle O(2ⁿ), due aux recalculs répétés, la rend beaucoup plus lente que fib_iteratif, qui résout le même problème en O(n) et sans mémoire supplémentaire.
-
-**3. C'est quoi la complexité temporelle ? La complexité spatiale ? Que signifient O(n), O(n²), O(2ⁿ) ?**
-La complexité temporelle mesure la croissance du nombre d'opérations en fonction de la taille n de l'entrée ; la complexité spatiale mesure la croissance de la mémoire utilisée. O(n) : le temps croît proportionnellement à n (une boucle simple). O(n²) : il croît au carré de n (deux boucles imbriquées). O(2ⁿ) : il double à chaque n supplémentaire — croissance exponentielle, cas de fib_naive.
-
-**4. C'est quoi la mémoïsation ? Que fait functools.lru_cache ? Pourquoi Python limite-t-il la profondeur de récursion ?**
-La mémoïsation stocke les résultats déjà calculés pour les réutiliser sans les recalculer. functools.lru_cache applique automatiquement cette technique à une fonction via un décorateur. Python limite la profondeur de récursion car chaque appel en attente occupe de la mémoire dans la pile d'appels ; sans limite, une récursion sans fin épuiserait la mémoire disponible — la limite provoque une RecursionError propre avant d'en arriver là.
-
+## Partie A. Les fonctions
+ 
+### A Q1. Pourquoi découper le code en fonctions ?
+ 
+D'abord pour ne pas répéter le même code. On écrit "moyenne()" une seule fois et on peut ensuite l'utiliser sur n'importe quelle liste de taux. Ensuite, le code devient plus lisible, puisque chaque fonction a un nom qui dit ce qu'elle fait. Enfin, c'est plus facile de vérifier et de corriger. On a par exemple pu tester notre fonction "moyenne()" toute seule en la comparant à "statistics.mean", et si on trouve une erreur, on la corrige à un seul endroit.
+ 
+### A Q2. Paramètre et valeur de retour, fonction sans return
+ 
+Le paramètre, c'est ce qu'on donne à la fonction en entrée, comme la liste de taux dans "moyenne(liste_taux)". La valeur de retour, c'est le résultat que la fonction renvoie avec "return", qu'on peut ensuite garder dans une variable. Une fonction sans "return" renvoie "None". C'est le cas d'une fonction qui fait seulement un "print", elle affiche quelque chose mais ne renvoie rien qu'on puisse réutiliser.
+ 
+### A Q3. Qu'est-ce qu'une docstring ?
+ 
+C'est une courte description de la fonction, écrite entre triples guillemets juste en dessous de la ligne "def". Elle explique ce que fait la fonction, et on peut l'afficher avec "help(moyenne)".
+ 
+### A Q4. Variable locale et variable globale
+ 
+Une variable locale est créée à l'intérieur d'une fonction et n'existe que pendant que la fonction s'exécute. Une variable globale est créée en dehors de toute fonction et peut être lue partout. Si on donne dans une fonction une valeur à une variable qui porte le même nom qu'une globale, Python crée en fait une nouvelle variable locale, et la globale ne change pas. On l'a vérifié dans le notebook, où "devise" reste "USD" après l'appel de la fonction. Pour modifier une globale depuis une fonction, il faudrait écrire "global", mais il vaut mieux passer la valeur en paramètre et la récupérer avec "return".
+ 
+Pour la partie A.2, notre moyenne et celle de "statistics.mean" sont identiques, à une toute petite différence près vers la quinzième décimale. Elle vient des arrondis des nombres décimaux en machine et ne change rien pour nos taux.
+ 
+## Partie B. Erreurs et logging
+ 
+### B Q1. Pourquoi try/except, exception non gérée, else et finally
+ 
+Certaines erreurs ne viennent pas de notre code, comme une coupure de connexion ou un serveur qui ne répond pas. "try/except" permet de les prévoir et de réagir proprement, en affichant un message clair au lieu de laisser le programme planter. Si une exception n'est pas gérée, Python arrête tout de suite le programme et affiche le message d'erreur, et la suite n'est jamais exécutée. Le bloc "else" s'exécute seulement si tout s'est bien passé dans le "try", alors que "finally" s'exécute dans tous les cas, qu'il y ait eu une erreur ou non. Dans notre fonction d'appel à l'API, on s'en sert pour noter dans le log que l'appel est terminé.
+ 
+### B Q2. Pourquoi un except nu est déconseillé ?
+ 
+Un "except:" sans type attrape absolument toutes les erreurs, même celles qu'on n'avait pas prévues, comme une faute de frappe dans un nom de variable. Le bug est alors caché et le programme continue comme si de rien n'était. Il vaut mieux préciser le type d'erreur, comme "HTTPError" ou "URLError", pour traiter chaque cas avec le bon message et laisser les vraies erreurs apparaître.
+ 
+### B Q3. C'est quoi logging, pourquoi le préférer à print, les niveaux
+ 
+"logging" est un module de Python qui enregistre ce qui se passe pendant l'exécution du programme, avec la date et un niveau d'importance, ici dans le fichier "seance2.log". On le préfère à "print" parce que les messages sont gardés dans un fichier qu'on peut relire après coup, et parce qu'on peut trier les messages selon leur importance. Il y a cinq niveaux. "DEBUG" sert aux détails pour chercher un bug, "INFO" au déroulement normal (par exemple « appel de l'API »), "WARNING" à un cas suspect qui n'empêche pas de continuer (chez nous, un taux qui n'est pas daté du jour), "ERROR" à une opération qui a échoué (une erreur 404 ou une absence de connexion), et "CRITICAL" à une erreur si grave que le programme ne peut plus continuer.
+ 
+## Partie C. Récursivité et complexité
+ 
+### C Q1. Récursivité, cas de base, cas récursif
+ 
+Une fonction récursive est une fonction qui s'appelle elle-même pour résoudre une version plus petite du même problème, comme la factorielle, puisque n! = n × (n-1)!. Le cas de base est le cas simple où on connaît directement la réponse, et c'est lui qui arrête les appels (pour la factorielle, 0! = 1). Le cas récursif est celui où la fonction se rappelle sur un problème plus petit, qui se rapproche du cas de base. Sans cas de base, la fonction s'appellerait à l'infini, et Python finit par s'arrêter avec une "RecursionError" quand on dépasse 1000 appels imbriqués.
+ 
+### C Q2. Pourquoi la récursivité, est-ce toujours le meilleur choix ?
+ 
+La récursivité est pratique quand un problème se découpe naturellement en sous-problèmes du même type, parce que le code reste court et proche de la formule mathématique. Mais ce n'est pas toujours le bon choix. Notre contre-exemple, c'est Fibonacci en version récursive naïve. Pour calculer fib(30), elle fait 2 692 537 appels et met environ 200 ms, parce qu'elle recalcule sans arrêt les mêmes valeurs. Une simple boucle fait le même calcul en 30 tours, en quelques millièmes de milliseconde. En plus, la récursivité est limitée en profondeur, et la version mémoïsée plante sur fib(5000) alors que la version avec une boucle le calcule sans problème.
+ 
+### C Q3. Complexité temporelle et spatiale, O(n), O(n²), O(2ⁿ)
+ 
+La complexité temporelle mesure comment le nombre d'opérations, et donc le temps, augmente quand la taille n des données augmente. La complexité spatiale mesure de la même façon la mémoire supplémentaire utilisée. O(n) veut dire que si n double, le travail double aussi, comme pour une boucle simple qui calcule une moyenne. O(n²) veut dire que si n double, le travail est multiplié par quatre, comme avec deux boucles imbriquées. On l'a vu dans le notebook, avec 100 opérations pour n = 10 et 400 pour n = 20. O(2ⁿ) veut dire qu'ajouter 1 à n multiplie le travail par 2 au maximum, et ça devient vite impossible. Pour notre Fibonacci naïf, le temps était multiplié par environ 1,6 à chaque fois qu'on ajoutait 1 à n, ce qui reste bien une croissance exponentielle.
+ 
+### C Q4. Mémoïsation, lru_cache, limite de récursion
+ 
+La mémoïsation consiste à garder en mémoire les résultats déjà calculés pour ne pas les recalculer. "functools.lru_cache" le fait automatiquement, il suffit d'écrire "@lru_cache" au-dessus de la fonction. Avec ça, Fibonacci passe d'un temps exponentiel à un temps linéaire, en échange d'un peu de mémoire pour stocker les résultats. Python limite la profondeur de récursion à 1000 par défaut, parce que chaque appel en attente occupe de la mémoire. Sans limite, une récursion infinie finirait par saturer la mémoire et faire planter Python, alors qu'avec la limite on obtient une erreur claire.
+ 
+## Mesures
+ 
+Nos mesures montrent bien l'explosion de la version naïve de Fibonacci. Le temps passe d'environ 0,02 ms pour n = 10 à 2 ms pour n = 20, puis à environ 200 ms pour n = 30 et 600 ms pour n = 32, avec plus de 7 millions d'appels pour ce dernier cas. Pour n = 30, la version mémoïsée met environ 0,02 ms et la version itérative environ 0,004 ms. Pour n = 5000, seule la version itérative fonctionne (environ 0,5 ms), la version mémoïsée provoquant une "RecursionError". Côté mémoire, la version naïve et la version mémoïsée empilent jusqu'à n appels en attente, la seconde gardant en plus n + 1 valeurs dans son cache, alors que la version itérative n'utilise que deux variables. La version itérative est donc à la fois la plus rapide et la plus économe.
 
