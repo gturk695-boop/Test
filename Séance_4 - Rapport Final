@@ -39,10 +39,12 @@ avec trois commandes, extraire, analyser et graphiques.
 
 Graphiques produits
 
-- `graphique_usd.png` : évolution du taux EUR/USD sur janvier 2026, sous forme de courbe.
-- `comparaison_usd_gbp.png` : comparaison des évolutions EUR/USD et EUR/GBP sur la même période.
-- `histogramme_variations.png` : distribution des variations quotidiennes du taux EUR/USD.
-- `subplots_usd_gbp.png` : les deux courbes USD et GBP affichées côte à côte, pour comparer leurs échelles respectives.
+Tous les graphiques sont dans le dossier graphiques/ et couvrent toute la période, du 31/12/2025 au 01/09/2026.
+
+- `eur_usd.png` et `eur_gbp.png` : évolution des taux EUR/USD et EUR/GBP, sous forme de courbe.
+- `comparaison.png` : comparaison des deux taux en base 100 au 31/12/2025, pour pouvoir les comparer malgré leurs niveaux différents (1,17 dollar et 0,87 livre pour 1 euro).
+- `histogramme_usd.png` et `histogramme_gbp.png` : distribution des variations quotidiennes en %.
+- `comparaison_histogramme.png` : la comparaison en base 100 et l'histogramme EUR/USD affichés côte à côte (subplots).
 
 
 
@@ -53,21 +55,21 @@ Devise	31/12/2025	01/09/2026	Variation
 USD	    1,1750	     1,1590	      −1,36 %
 GBP	    0,8726	     0,8566	      −1,84 %
 
-Sur janvier 2026, le taux EUR/USD suit une évolution en deux temps : 
-- une baisse progressive de début de mois (d'environ 1,175 le 1er janvier à un point bas autour de 1,160 vers le 14-15 janvier)
-suivie d'une hausse nette et rapide jusqu'à un pic proche de 1,197 vers le 27-28 janvier, avant un léger repli en toute fin de mois. 
+Sur la période, l'euro a baissé face aux deux devises, un peu plus face à la livre que face au dollar. 
 
-La comparaison avec le taux EUR/GBP montre une dynamique très similaire sur la même période : 
-les deux courbes présentent le même creux autour de la mi-janvier et la même remontée marquée en fin de mois, ce qui 
-suggère que les deux devises ont été influencées par des facteurs communs sur cette période (probablement liés à l'évolution 
-de l'euro lui-même plutôt qu'à des facteurs propres à chaque devise). 
+Le taux EUR/USD est le plus agité. Après une petite baisse début janvier, il monte nettement jusqu'à son plus haut de la période 
+(1,1974 fin janvier), puis redescend par étapes jusqu'à la mi-mars. Il remonte autour de 100 en base 100 en avril et début mai, 
+avant de chuter jusqu'à son plus bas (1,134 fin juin). Il reste bas en juillet, puis remonte surtout en août pour finir à 1,159, 
+soit −1,36 % sur la période. Son taux moyen est de 1,1624.
 
-L'histogramme des variations quotidiennes du USD confirme que la plupart des mouvements journaliers restent modérés, 
-répartis entre -0,006 et +0,010, avec une majorité de variations négatives ou proches de zéro en début de période et 
-quelques variations positives plus marquées, cohérentes avec la remontée observée en fin de mois. 
+Le taux EUR/GBP bouge beaucoup moins. En base 100, il reste entre 97 et 100,5 environ sur toute la période, contre un écart 
+d'environ 96,5 à 102 pour le dollar. Il baisse surtout en juillet, atteint son point le plus bas vers la fin du mois, 
+puis remonte légèrement en août pour finir à −1,84 %. Les deux courbes évoluent parfois dans le même sens, comme pendant 
+l'été, où elles baissent toutes les deux avant de remonter en août, mais le dollar réagit beaucoup plus fortement.
 
-Le graphique en subplots, en affichant USD et GBP côte à côte avec leurs échelles propres, permet de confirmer visuellement 
-cette ressemblance de forme entre les deux courbes malgré des niveaux de taux très différents. 
+L'histogramme des variations quotidiennes d'EUR/USD montre que la plupart des mouvements journaliers sont faibles, 
+le plus souvent inférieurs à 0,5 % en valeur absolue et centrés autour de zéro. Quelques jours plus agités sortent du lot, 
+avec des variations allant d'environ −1,1 % à +1,3 %.
 
 Ce projet a permis de mettre en pratique l'ensemble de la chaîne de traitement de données : récupération via une API, nettoyage et analyse, 
 puis visualisation, tout en structurant le code de façon plus professionnelle (classes, outil en ligne de commande).
