@@ -1,4 +1,4 @@
-# Projet Python
+# Projet Python - BFA1
  
 Récupération et analyse des taux de change de référence de la BCE (API Frankfurter) du 1er janvier au 1er septembre 2026, pour le dollar (USD), le yen (JPY) et la livre sterling (GBP).
  
@@ -34,21 +34,13 @@ EUR/USD du 2025-12-31 au 2026-09-01
   variation : -1.36 %
 ```
  
-## Organisation
- 
-```
-main.py              ligne de commande (argparse)
-src/donnees.py       appel à l'API et cache
-src/serie.py         classe SerieTaux
-src/graphiques.py    graphiques matplotlib
-cache/               réponses brutes de l'API (JSON)
-donnees/             CSV des taux
-graphiques/          figures PNG
-docs/                notes des séances 1 à 4 et rapport final
-seance1.ipynb ... seance4.ipynb    travail de chaque séance
-```
- 
 ## Documents
  
-- [Rapport final](docs/rapport_final.md)
-- Notes des séances : [1](docs/notes_seance1.md), [2](docs/notes_seance2.md), [3](docs/notes_seance3.md), [4](docs/notes_seance4.md)
+| Séance | Code | Réponses aux questions |
+|---|---|---|
+| Séance 1 | [Séance_1_Notebook.ipynb](S%C3%A9ance_1_Notebook.ipynb) | [Séance_1 - questions](S%C3%A9ance_1%20-%20questions) |
+| Séance 2 | [Séance_2_Notebook.ipynb](S%C3%A9ance_2_Notebook.ipynb) | [Séance_2 - questions](S%C3%A9ance_2%20-%20questions) |
+| Séance 3 | [Séance_3_Notebook.ipynb](S%C3%A9ance_3_Notebook.ipynb) | [Séance_3 - questions](S%C3%A9ance_3%20-%20questions) |
+| Séance 4 | [Séance_4 - code](S%C3%A9ance_4%20-%20code) | [Séance_4 - questions](S%C3%A9ance_4%20-%20questions) |
+ 
+**[Rapport final](S%C3%A9ance_4%20-%20Rapport%20Final)**
