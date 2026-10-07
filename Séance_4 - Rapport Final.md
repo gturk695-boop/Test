@@ -4,7 +4,7 @@ Rapport final — Projet d'analyse des taux de change
 
 Objectif
 
-Récupérer les taux de change de référence publiés par la BCE pour trois devises (dollar américain, yen, livre sterling), 
+Récupérer les taux de change de référence publiés par la BCE pour deux devises (dollar américain et livre sterling), 
 du 1er janvier au 1er septembre 2026, puis les nettoyer, les analyser et les représenter graphiquement. 
 
 
@@ -28,7 +28,7 @@ Le traitement est découpé en fonctions (lecture du CSV, moyenne, min/max). L'a
 Séance 3 : pandas
 Les données sont chargées dans un DataFrame. Les 4 jours fériés de la BCE (1er janvier, Vendredi saint, lundi de Pâques, 1er mai)
 sont comblés par forward-fill, ce qui donne 175 jours ouvrés. Nous avons choisi le forward-fill parce qu'un jour férié, le dernier 
-taux publié reste le taux de référence. Les trois devises sont ensuite réunies par une jointure sur la date.
+taux publié reste le taux de référence. Les deux devises sont ensuite réunies par une jointure sur la date.
 
 Séance 4 : organisation finale 
 Une classe SerieTaux regroupe les taux d'une devise et ses calculs. Le code est rangé dans src/ et piloté par main.py 
@@ -51,7 +51,6 @@ Résultats
 
 Devise	31/12/2025	01/09/2026	Variation
 USD	    1,1750	     1,1590	      −1,36 %
-JPY	    184,09	     185,63	      +0,84 %
 GBP	    0,8726	     0,8566	      −1,84 %
 
 Sur janvier 2026, le taux EUR/USD suit une évolution en deux temps : 
