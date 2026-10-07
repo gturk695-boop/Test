@@ -35,12 +35,13 @@ EUR/USD du 2025-12-31 au 2026-09-01
 ```
  
 ## Documents
- 
+
+
 | Séance | Code | Réponses aux questions |
 |---|---|---|
-| Séance 1 | [Séance_1_Notebook.ipynb](S%C3%A9ance_1_Notebook.ipynb) | [Séance_1 - questions](S%C3%A9ance_1%20-%20questions) |
-| Séance 2 | [Séance_2_Notebook.ipynb](S%C3%A9ance_2_Notebook.ipynb) | [Séance_2 - questions](S%C3%A9ance_2%20-%20questions) |
-| Séance 3 | [Séance_3_Notebook.ipynb](S%C3%A9ance_3_Notebook.ipynb) | [Séance_3 - questions](S%C3%A9ance_3%20-%20questions) |
-| Séance 4 | [Séance_4 - code](S%C3%A9ance_4%20-%20code) | [Séance_4 - questions](S%C3%A9ance_4%20-%20questions) |
- 
-**[Rapport final](S%C3%A9ance_4%20-%20Rapport%20Final)**
+| Séance 1 | [Séance_1_Notebook.ipynb](S%C3%A9ance_1_Notebook.ipynb) | [Séance_1 - questions](S%C3%A9ance_1%20-%20questions.md) |
+| Séance 2 | [Séance_2_Notebook.ipynb](S%C3%A9ance_2_Notebook.ipynb) | [Séance_2 - questions](S%C3%A9ance_2%20-%20questions.md) |
+| Séance 3 | [Séance_3_Notebook.ipynb](S%C3%A9ance_3_Notebook.ipynb) | [Séance_3 - questions](S%C3%A9ance_3%20-%20questions.md) |
+| Séance 4 | [Séance_4 - code](S%C3%A9ance_4%20-%20code) | [Séance_4 - questions](S%C3%A9ance_4%20-%20questions.md) |
+
+**[Rapport final](S%C3%A9ance_4%20-%20Rapport%20Final.md)**
