@@ -39,7 +39,6 @@ Graphiques produits en séance 4
 - [graphique_usd.png](graphique_usd.png) évolution de l'EUR/USD
 - [comparaison_usd_gbp.png](comparaison_usd_gbp.png) comparaison des deux devises
 - [histogramme_variations.png](histogramme_variations.png) distribution des variations quotidiennes
-- [subplots_usd_gbp.png](subplots_usd_gbp.png) graphiques côte à côte
 
 ## Principaux résultats (EUR/USD)
 
